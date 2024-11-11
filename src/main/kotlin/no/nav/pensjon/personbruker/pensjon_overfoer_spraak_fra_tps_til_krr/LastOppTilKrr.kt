@@ -30,18 +30,12 @@ class LastOppTilKrr(
             do {
                 val personIdent = repository.hentPerson()
                 if (personIdent != null) {
-                    val spraakKrr = digdirKrrProxyClient.hentSpraak(personIdent)
-                    if (spraakKrr == "en") {
-                        logger.info("Bruker har allerede engelsk i KRR. Setter bruker til ferdig")
-                        repository.oppdaterLagretFlagg(personIdent)
-                        continue
-                    }
                     teller.incrementAndGet()
-                    digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, "en")
+                    val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, "en")
                     if (teller.get() % 100 == 0) {
                         logger.info("Lastet opp {} språkvalg til krr", teller.get())
                     }
-                    repository.oppdaterLagretFlagg(personIdent)
+                    repository.oppdaterLagretFlagg(personIdent, brukereErSatt)
                 } else {
                     logger.info("Ferdig med å laste opp til krr")
                 }

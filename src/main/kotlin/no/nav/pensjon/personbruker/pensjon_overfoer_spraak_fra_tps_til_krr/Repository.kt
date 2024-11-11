@@ -11,12 +11,12 @@ class Repository(
 ) {
     fun hentPerson(): String? =
         transactionTemplate.execute {
-            jdbcTemplate.queryForObject("select fnr from person where lastet_opp is null or lastet_opp = false limit 1", String::class.java)
+            jdbcTemplate.queryForObject("select fnr from person where lastet_opp is null limit 1", String::class.java)
         }
 
-    fun oppdaterLagretFlagg(person: String) {
+    fun oppdaterLagretFlagg(person: String, erSatt: Boolean) {
         transactionTemplate.executeWithoutResult {
-           jdbcTemplate.update("update person set lastet_opp = true where fnr = ?", person)
+           jdbcTemplate.update("update person set lastet_opp = ? where fnr = ?", erSatt, person)
         }
     }
 }
