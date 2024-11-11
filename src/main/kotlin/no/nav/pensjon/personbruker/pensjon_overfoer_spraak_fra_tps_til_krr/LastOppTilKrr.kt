@@ -2,6 +2,7 @@ package no.nav.pensjon.personbruker.pensjon_overfoer_spraak_fra_tps_til_krr
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory.getLogger
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.util.concurrent.TimeUnit
@@ -34,6 +35,8 @@ class LastOppTilKrr(
             } while (person != null)
 
             logger.info("Lastet opp {} språkvalg til krr", teller.get())
+        } catch (empty: EmptyResultDataAccessException) {
+            logger.info("Tom tabell")
         } catch (e: Exception) {
             logger.error("Feil ved opplastning til KRR", e)
         }
