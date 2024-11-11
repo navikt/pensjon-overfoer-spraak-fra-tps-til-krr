@@ -43,3 +43,6 @@ spec:
       allowAllUsers: true
       enabled: true
       tenant: trygdeetaten.no
+  env:
+    KRR_ENDPOINT: "{{env.krr.endpoint}}"
+    KRR_SCOPE: "{{env.krr.scope}}"

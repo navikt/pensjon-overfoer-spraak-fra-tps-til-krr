@@ -2,3 +2,8 @@ app:
   name: 'pensjon-overfoer-spraak-fra-tps-til-krr'
   ingress: 'https://pensjon-overfoer-spraak-fra-tps-til-krr.intern.dev.nav.no'
   database: 'pensjon-overfoer-spraak-fra-tps-til-krr'
+
+env:
+  krr:
+    endpoint: "https://digdir-krr-proxy.intern.dev.nav.no"
+    scope: "api://dev-gcp.team-rocket.digdir-krr-proxy/.default"
