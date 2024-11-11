@@ -20,6 +20,32 @@ class DigdirKrrProxyClient(
 ) {
     private val logger: Logger = LoggerFactory.getLogger(DigdirKrrProxyClient::class.java)
 
+
+    fun hentSpraak(pid: String): String? {
+
+        val headers = HttpHeaders()
+            .apply {
+                set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                set("Nav-Personident", pid)
+            }
+
+        try {
+            return restOperations.exchange(
+                "$endpoint/rest/v1/person",
+                HttpMethod.GET,
+                HttpEntity(null, headers),
+                Kontaktinfo::class.java
+            ).body?.spraak
+        } catch (e: RestClientException) {
+            if ((e as? HttpClientErrorException)?.statusCode == NOT_FOUND) {
+                return null
+            }
+
+            logger.warn("Kunne ikke hente kontaktinformasjon fra KRR", e)
+            return null
+        }
+    }
+
     fun setSpraakForAnalogBruker(pid: String, spraak: String): Boolean {
         val headers = HttpHeaders()
             .apply {

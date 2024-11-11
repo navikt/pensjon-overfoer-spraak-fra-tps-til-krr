@@ -31,6 +31,8 @@ class LastOppTilKrr(
                 val personIdent = repository.hentPerson()
                 if (personIdent != null) {
                     teller.incrementAndGet()
+                    val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
+
                     val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, "en")
                     if (teller.get() % 100 == 0) {
                         logger.info("Lastet opp {} språkvalg til krr", teller.get())
