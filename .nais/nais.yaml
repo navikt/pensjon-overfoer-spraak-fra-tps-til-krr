@@ -44,5 +44,7 @@ spec:
       enabled: true
       tenant: trygdeetaten.no
   env:
-    KRR_ENDPOINT: "{{env.krr.endpoint}}"
-    KRR_SCOPE: "{{env.krr.scope}}"
+    - name: KRR_ENDPOINT
+      value: "{{env.krr.endpoint}}"
+    - name: KRR_SCOPE
+      value: "{{env.krr.scope}}"
