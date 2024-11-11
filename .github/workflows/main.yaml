@@ -1,0 +1,58 @@
+name: Build and deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build and push image
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Build
+        run:
+          mvn package
+
+      - name: Push docker image to GAR
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: pensjon-person
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+
+  deploy:
+    permissions:
+      contents: "read"
+      id-token: "write"
+    if: github.ref == 'refs/heads/main'
+    needs: [build]
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        include:
+          - name: pensjon-overfoer-spraak-fra-tps-til-krr
+            vars: .nais/vars-dev.yaml
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        name: 'Deploy to NAIS'
+        env:
+          RESOURCE: .nais/nais.yaml
+          CLUSTER: dev-gcp
+          IMAGE: "${{ needs.build.outputs.image }}"
+          VARS: ${{matrix.vars}}

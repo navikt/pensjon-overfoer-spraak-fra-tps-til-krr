@@ -1,0 +1,4 @@
+app:
+  name: 'pensjon-overfoer-spraak-fra-tps-til-krr'
+  ingress: 'https://pensjon-overfoer-spraak-fra-tps-til-krr.intern.dev.nav.no'
+  database: 'pensjon-overfoer-spraak-fra-tps-til-krr'
