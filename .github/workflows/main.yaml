@@ -52,7 +52,7 @@ jobs:
       - uses: nais/deploy/actions/deploy@v2
         name: 'Deploy to NAIS'
         env:
-          RESOURCE: .nais/nais.yaml
+          RESOURCE: .nais/nais-dev.yaml
           CLUSTER: dev-gcp
           IMAGE: "${{ needs.build.outputs.image }}"
           VARS: ${{matrix.vars}}
