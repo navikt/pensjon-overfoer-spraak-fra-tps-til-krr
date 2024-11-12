@@ -21,6 +21,7 @@ class LastOppTilKrr(
     val digdirKrrProxyClient: DigdirKrrProxyClient,
 ) {
     private val logger: Logger = getLogger(javaClass)
+    private val ENGELSK = "en"
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     fun lastOppTilKrr() {
@@ -31,17 +32,29 @@ class LastOppTilKrr(
                 val personIdent = repository.hentPerson()
                 if (personIdent != null) {
                     teller.incrementAndGet()
-                    val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, "en")
+                    val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
+                    if(spraakIKrr == null) {
+                        logger.info("Bruker finnes ikke i krr -> Oppdaterer...")
+                        val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
+                        repository.oppdaterLagretFlagg(personIdent, brukereErSatt)
+                    } else {
+                        repository.oppdaterLagretFlagg(personIdent, false)
+                    }
+
                     if (teller.get() % 100 == 0) {
                         logger.info("Lastet opp {} språkvalg til krr", teller.get())
                     }
-                    repository.oppdaterLagretFlagg(personIdent, brukereErSatt)
+
                 } else {
                     logger.info("Ferdig med å laste opp til krr")
                 }
             } while (personIdent != null)
 
-            logger.info("Lastet opp {} språkvalg til krr", teller.get())
+            val opprettetKrr = repository.antallOpprettet()
+            val ignorertKrr = repository.antallIgnorert()
+            val gjenvaerende = repository.antallGjenvaerende()
+            logger.info("Ferdig. Antall opprettet i KRR: $opprettetKrr, antall ignorert: $ignorertKrr, antall gjenvaerende: $gjenvaerende")
+
         } catch (empty: EmptyResultDataAccessException) {
             logger.info("Tom tabell")
         } catch (e: Exception) {
