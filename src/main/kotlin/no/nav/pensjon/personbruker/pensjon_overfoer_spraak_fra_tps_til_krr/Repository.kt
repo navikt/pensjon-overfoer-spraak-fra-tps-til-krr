@@ -17,7 +17,6 @@ class Repository(
     fun oppdaterLagretFlagg(person: String, erSatt: Boolean) {
         transactionTemplate.executeWithoutResult {
            jdbcTemplate.update("update person set lastet_opp = ? where fnr = ?", erSatt, person)
-
         }
     }
 
