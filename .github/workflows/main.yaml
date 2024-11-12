@@ -56,3 +56,27 @@ jobs:
           CLUSTER: dev-gcp
           IMAGE: "${{ needs.build.outputs.image }}"
           VARS: ${{matrix.vars}}
+
+  deploy-prod:
+    permissions:
+      contents: "read"
+      id-token: "write"
+    if: github.ref == 'refs/heads/main'
+    needs: [build]
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        include:
+          - name: pensjon-overfoer-spraak-fra-tps-til-krr
+            vars: .nais/vars-prod.yaml
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nais/deploy/actions/deploy@v2
+        name: 'Deploy to NAIS'
+        env:
+          RESOURCE: .nais/nais-prod.yaml
+          CLUSTER: prod-gcp
+          IMAGE: "${{ needs.build.outputs.image }}"
+          VARS: ${{matrix.vars}}

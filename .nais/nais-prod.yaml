@@ -1,0 +1,54 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+
+metadata:
+  labels:
+    team: pensjon-person
+  name: "{{app.name}}"
+  namespace: pensjon-person
+spec:
+  ingresses:
+    - "{{app.ingress}}"
+  image: {{image}}
+  port: 8080
+  replicas:
+    max: 1
+    min: 1
+  accessPolicy:
+    outbound:
+      external:
+        - host: digdir-krr-proxy.intern.nav.no
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_15
+        databases:
+          - name: "{{app.database}}"
+            envVarPrefix: POSTGRES
+        pointInTimeRecovery: false
+        retainedBackups: 1
+        tier: db-f1-micro
+  liveness:
+    path: "/actuator/health/liveness"
+    initialDelay: 10
+  readiness:
+    path: "/actuator/health/readiness"
+    initialDelay: 10
+  startup:
+    path: "/actuator/health/readiness"
+    initialDelay: 10
+    failureThreshold: 100
+    periodSeconds: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+  azure:
+    application:
+      allowAllUsers: true
+      enabled: true
+      tenant: trygdeetaten.no
+  env:
+    - name: KRR_ENDPOINT
+      value: "{{env.krr.endpoint}}"
+    - name: KRR_SCOPE
+      value: "{{env.krr.scope}}"
