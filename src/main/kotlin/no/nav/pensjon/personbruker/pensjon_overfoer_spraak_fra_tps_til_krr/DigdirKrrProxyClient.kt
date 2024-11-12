@@ -7,11 +7,13 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.NOT_FOUND
+import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Component
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestClientException
 import org.springframework.web.client.RestOperations
+import java.util.UUID
 
 @Component
 class DigdirKrrProxyClient(
@@ -26,6 +28,7 @@ class DigdirKrrProxyClient(
         val headers = HttpHeaders()
             .apply {
                 set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                set("Nav-Call-Id", UUID.randomUUID().toString())
                 set("Nav-Personident", pid)
             }
 
@@ -40,6 +43,10 @@ class DigdirKrrProxyClient(
             if ((e as? HttpClientErrorException)?.statusCode == NOT_FOUND) {
                 logger.info("Kontaktinfo Not Found")
                 return null
+            } else {
+                if ((e as? HttpClientErrorException)?.statusCode == BAD_REQUEST) {
+                    throw RuntimeException(e)
+                }
             }
             logger.warn("Kunne ikke hente kontaktinformasjon fra KRR", e)
             return null
@@ -50,6 +57,7 @@ class DigdirKrrProxyClient(
         val headers = HttpHeaders()
             .apply {
                 set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                set("Nav-Call-Id", UUID.randomUUID().toString())
                 set("Nav-Personident", pid)
             }
         try {

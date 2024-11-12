@@ -33,7 +33,6 @@ class LastOppTilKrr(
                 if (personIdent != null) {
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
-                    logger.info("$personIdent Språk i Krr: $spraakIKrr")
                     if(spraakIKrr == null) {
                         logger.info("Bruker finnes ikke i krr -> Oppdaterer...")
                         val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
