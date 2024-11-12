@@ -5,5 +5,5 @@ app:
 
 env:
   krr:
-    endpoint: "https://digdir-krr-proxy.intern.dev.nav.no"
+    endpoint: "http://digdir-krr-proxy.team-rocket"
     scope: "api://dev-gcp.team-rocket.digdir-krr-proxy/.default"
