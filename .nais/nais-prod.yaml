@@ -46,7 +46,7 @@ spec:
     application:
       allowAllUsers: true
       enabled: true
-      tenant: trygdeetaten.no
+      tenant: nav.no
   env:
     - name: KRR_ENDPOINT
       value: "{{env.krr.endpoint}}"
