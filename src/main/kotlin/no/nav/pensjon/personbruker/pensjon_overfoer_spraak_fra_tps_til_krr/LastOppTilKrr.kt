@@ -21,6 +21,7 @@ class LastOppTilKrr(
     val digdirKrrProxyClient: DigdirKrrProxyClient,
 ) {
     private val logger: Logger = getLogger(javaClass)
+    private val ENGELSK = "en"
 
     @Scheduled(fixedDelay = 1, timeUnit = TimeUnit.MINUTES)
     fun lastOppTilKrr() {
@@ -32,12 +33,18 @@ class LastOppTilKrr(
                 if (personIdent != null) {
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
+                    if(spraakIKrr == null) {
+                        logger.info("Bruker finnes ikke i krr -> Oppdaterer...")
+                        val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
+                        repository.oppdaterLagretFlagg(personIdent, brukereErSatt)
+                    } else {
+                        repository.oppdaterLagretFlagg(personIdent, false)
+                    }
 
-                    val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, "en")
                     if (teller.get() % 100 == 0) {
                         logger.info("Lastet opp {} språkvalg til krr", teller.get())
                     }
-                    repository.oppdaterLagretFlagg(personIdent, brukereErSatt)
+
                 } else {
                     logger.info("Ferdig med å laste opp til krr")
                 }
