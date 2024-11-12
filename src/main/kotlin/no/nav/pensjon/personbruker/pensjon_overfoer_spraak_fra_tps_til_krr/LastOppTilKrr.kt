@@ -33,6 +33,7 @@ class LastOppTilKrr(
                 if (personIdent != null) {
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
+                    logger.info("$personIdent Språk i Krr: $spraakIKrr")
                     if(spraakIKrr == null) {
                         logger.info("Bruker finnes ikke i krr -> Oppdaterer...")
                         val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
@@ -42,7 +43,7 @@ class LastOppTilKrr(
                     }
 
                     if (teller.get() % 100 == 0) {
-                        logger.info("Lastet opp {} språkvalg til krr", teller.get())
+                        logger.info("Lastet opp ${teller.get()} språkvalg til krr")
                     }
 
                 } else {

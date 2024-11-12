@@ -38,6 +38,7 @@ class DigdirKrrProxyClient(
             ).body?.spraak
         } catch (e: RestClientException) {
             if ((e as? HttpClientErrorException)?.statusCode == NOT_FOUND) {
+                logger.info("Kontaktinfo Not Found")
                 return null
             }
             logger.warn("Kunne ikke hente kontaktinformasjon fra KRR", e)
@@ -51,7 +52,6 @@ class DigdirKrrProxyClient(
                 set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 set("Nav-Personident", pid)
             }
-
         try {
             restOperations.exchange(
                 "$endpoint/rest/v1/person/spraak",
