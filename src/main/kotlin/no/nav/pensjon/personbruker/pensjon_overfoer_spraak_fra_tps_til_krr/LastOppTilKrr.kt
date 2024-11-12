@@ -50,7 +50,11 @@ class LastOppTilKrr(
                 }
             } while (personIdent != null)
 
-            logger.info("Lastet opp {} språkvalg til krr", teller.get())
+            val opprettetKrr = repository.antallOpprettet()
+            val ignorertKrr = repository.antallIgnorert()
+            val gjenvaerende = repository.antallGjenvaerende()
+            logger.info("Ferdig. Antall opprettet i KRR: $opprettetKrr, antall ignorert: $ignorertKrr, antall gjenvaerende: $gjenvaerende")
+
         } catch (empty: EmptyResultDataAccessException) {
             logger.info("Tom tabell")
         } catch (e: Exception) {
