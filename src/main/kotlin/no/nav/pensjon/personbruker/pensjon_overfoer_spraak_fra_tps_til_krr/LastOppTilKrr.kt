@@ -38,6 +38,7 @@ class LastOppTilKrr(
                         val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
                         repository.oppdaterLagretFlagg(personIdent, brukereErSatt, !brukereErSatt)
                     } else {
+                        logger.info("Språk i KRR: $spraakIKrr")
                         repository.oppdaterLagretFlagg(personIdent, false, false)
                     }
 
