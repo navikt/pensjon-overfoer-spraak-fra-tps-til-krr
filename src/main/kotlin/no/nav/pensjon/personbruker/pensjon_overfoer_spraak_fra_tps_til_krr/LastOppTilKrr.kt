@@ -36,14 +36,15 @@ class LastOppTilKrr(
                     if(spraakIKrr == null) {
                         logger.info("Bruker finnes ikke i krr -> Oppdaterer...")
                         val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
-                        repository.oppdaterLagretFlagg(personIdent, brukereErSatt)
+                        repository.oppdaterLagretFlagg(personIdent, brukereErSatt, !brukereErSatt)
                     } else {
-                        repository.oppdaterLagretFlagg(personIdent, false)
+                        repository.oppdaterLagretFlagg(personIdent, false, false)
                     }
 
                     if (teller.get() % 100 == 0) {
                         val ignorertKrr = repository.antallIgnorert()
-                        logger.info("Lastet opp ${teller.get()} språkvalg. Antall ignorert $ignorertKrr")
+                        val antallFeilet = repository.antallFeilet()
+                        logger.info("Lastet opp ${teller.get()} språkvalg. Antall ignorert $ignorertKrr. Antall feilet: $antallFeilet")
                     }
 
                 } else {

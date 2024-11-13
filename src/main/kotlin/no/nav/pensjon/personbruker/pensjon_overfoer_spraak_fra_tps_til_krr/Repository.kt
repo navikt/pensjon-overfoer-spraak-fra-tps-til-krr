@@ -14,10 +14,14 @@ class Repository(
             jdbcTemplate.queryForObject("select fnr from person where lastet_opp is false limit 1", String::class.java)
         }
 
-    fun oppdaterLagretFlagg(person: String, erSatt: Boolean) {
+    fun oppdaterLagretFlagg(person: String, erSatt: Boolean, feilet: Boolean) {
         transactionTemplate.executeWithoutResult {
-           jdbcTemplate.update("update person set lastet_opp = ? where fnr = ?", erSatt, person)
+           jdbcTemplate.update("update person set lastet_opp = ?, feilet = ? where fnr = ?", erSatt, feilet, person)
         }
+    }
+
+    fun antallFeilet(): Int? = transactionTemplate.execute {
+        jdbcTemplate.queryForObject("select count(*) from person where feilet is true", Int::class.java)
     }
 
     fun antallOpprettet(): Int? = transactionTemplate.execute {
