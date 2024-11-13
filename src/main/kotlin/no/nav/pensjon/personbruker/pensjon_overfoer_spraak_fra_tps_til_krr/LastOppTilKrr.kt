@@ -42,7 +42,8 @@ class LastOppTilKrr(
                     }
 
                     if (teller.get() % 100 == 0) {
-                        logger.info("Lastet opp ${teller.get()} språkvalg til krr")
+                        val ignorertKrr = repository.antallIgnorert()
+                        logger.info("Lastet opp ${teller.get()} språkvalg. Antall ignorert $ignorertKrr")
                     }
 
                 } else {
