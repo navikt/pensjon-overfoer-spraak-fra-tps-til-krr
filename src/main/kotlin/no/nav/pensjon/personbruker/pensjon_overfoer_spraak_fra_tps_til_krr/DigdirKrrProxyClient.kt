@@ -42,10 +42,6 @@ class DigdirKrrProxyClient(
             if ((e as? HttpClientErrorException)?.statusCode == NOT_FOUND) {
                 logger.info("Kontaktinfo Not Found")
                 return null
-            } else {
-                if ((e as? HttpClientErrorException)?.statusCode == BAD_REQUEST) {
-                    throw RuntimeException(e)
-                }
             }
             logger.warn("Kunne ikke hente kontaktinformasjon fra KRR", e)
             return null
