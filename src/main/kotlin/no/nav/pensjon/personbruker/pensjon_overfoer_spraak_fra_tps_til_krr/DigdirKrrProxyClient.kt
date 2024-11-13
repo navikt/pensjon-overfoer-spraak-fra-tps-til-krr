@@ -24,12 +24,10 @@ class DigdirKrrProxyClient(
 
 
     fun hentSpraak(pid: String): String? {
-        val uuid = UUID.randomUUID().toString()
         val headers = HttpHeaders()
             .apply {
                 set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
-                set("Nav-Call-Id", uuid)
-                set("X-Request-ID", uuid)
+                set("Nav-Call-Id", UUID.randomUUID().toString())
                 set("Nav-Personident", pid)
             }
 
@@ -55,13 +53,11 @@ class DigdirKrrProxyClient(
     }
 
     fun setSpraakForAnalogBruker(pid: String, spraak: String): Boolean {
-        val uuid = UUID.randomUUID().toString()
         val headers = HttpHeaders()
             .apply {
                 set(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                set("Nav-Call-Id", uuid)
-                set("X-Request-ID", uuid)
+                set("Nav-Call-Id", UUID.randomUUID().toString())
                 set("Nav-Personident", pid)
             }
         try {
