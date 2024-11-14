@@ -30,7 +30,7 @@ class LastOppTilKrr(
 
             do {
                 val personIdent = repository.hentPerson()
-                if (personIdent != null) {
+                if (personIdent != null && isDnummer(personIdent)) {
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
                     if(spraakIKrr == null) {
@@ -49,7 +49,7 @@ class LastOppTilKrr(
                     }
 
                 } else {
-                    logger.info("Ferdig med å laste opp til krr")
+                    logger.info("Ikke d-nummer --> stop")
                 }
             } while (personIdent != null)
 
@@ -64,4 +64,6 @@ class LastOppTilKrr(
             logger.error("Feil ved opplastning til KRR", e)
         }
     }
+
+    private fun isDnummer(fnr: String) = fnr[2].digitToInt() > 1
 }
