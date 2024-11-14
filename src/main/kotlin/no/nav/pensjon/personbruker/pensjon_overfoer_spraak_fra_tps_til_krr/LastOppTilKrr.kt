@@ -36,11 +36,9 @@ class LastOppTilKrr(
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
                     if(spraakIKrr == null) {
-                        logger.info("Bruker finnes ikke i krr -> Oppdaterer...")
                         val brukereErSatt = digdirKrrProxyClient.setSpraakForAnalogBruker(personIdent, ENGELSK)
                         repository.oppdaterLagretFlagg(personIdent, brukereErSatt, !brukereErSatt)
                     } else {
-                        logger.info("Språk i KRR: $spraakIKrr")
                         repository.oppdaterLagretFlagg(personIdent, false, false)
                     }
 
