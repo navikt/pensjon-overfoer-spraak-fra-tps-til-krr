@@ -65,5 +65,5 @@ class LastOppTilKrr(
         }
     }
 
-    private fun isDnummer(fnr: String) = fnr[2].digitToInt() > 1
+    private fun isDnummer(fnr: String) = fnr[0].digitToInt() > 3
 }
