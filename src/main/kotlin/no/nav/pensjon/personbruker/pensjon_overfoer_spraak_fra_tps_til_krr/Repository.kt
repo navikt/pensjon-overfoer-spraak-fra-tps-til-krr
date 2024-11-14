@@ -11,7 +11,7 @@ class Repository(
 ) {
     fun hentPerson(): String? =
         transactionTemplate.execute {
-            jdbcTemplate.queryForObject("select fnr from person where lastet_opp is false and feilet is false order by fnr asc limit 1", String::class.java)
+            jdbcTemplate.queryForObject("select fnr from person where lastet_opp is false and feilet is null order by fnr asc limit 1", String::class.java)
         }
 
     fun oppdaterLagretFlagg(person: String, erSatt: Boolean, feilet: Boolean) {
