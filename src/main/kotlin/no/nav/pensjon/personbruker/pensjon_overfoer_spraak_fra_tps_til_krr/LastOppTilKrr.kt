@@ -31,7 +31,7 @@ class LastOppTilKrr(
             do {
                 val personIdent = repository.hentPerson()
                 if (personIdent != null && isNpid(personIdent)) {
-                    repository.oppdaterLagretFlagg(personIdent, false, false)
+                    repository.oppdaterLagretFlagg(personIdent, false, true)
                 } else if (personIdent != null && !isDnummer(personIdent)) {
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
