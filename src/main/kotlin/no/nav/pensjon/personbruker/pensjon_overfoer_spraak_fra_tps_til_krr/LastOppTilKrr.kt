@@ -30,7 +30,9 @@ class LastOppTilKrr(
 
             do {
                 val personIdent = repository.hentPerson()
-                if (personIdent != null && isDnummer(personIdent)) {
+                if (personIdent != null && isNpid(personIdent)) {
+                    repository.oppdaterLagretFlagg(personIdent, false, false)
+                } else if (personIdent != null && !isDnummer(personIdent)) {
                     teller.incrementAndGet()
                     val spraakIKrr = digdirKrrProxyClient.hentSpraak(personIdent)
                     if(spraakIKrr == null) {
@@ -48,8 +50,6 @@ class LastOppTilKrr(
                         logger.info("Lastet opp ${teller.get()} språkvalg. Antall ignorert $ignorertKrr. Antall feilet: $antallFeilet")
                     }
 
-                } else {
-                    logger.info("Ikke d-nummer --> stop")
                 }
             } while (personIdent != null)
 
@@ -66,4 +66,5 @@ class LastOppTilKrr(
     }
 
     private fun isDnummer(fnr: String) = fnr[0].digitToInt() > 3
+    private fun isNpid(fnr: String) = fnr[2].digitToInt() > 1
 }
